@@ -83,9 +83,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="PointerAccessTests.cpp" />
+    <ClCompile Include="Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="particles.h" />
+    <ClInclude Include="PerfTimer.h" />
+    <ClInclude Include="Tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

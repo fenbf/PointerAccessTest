@@ -2,8 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="PointerAccessTests.cpp" />
+    <ClCompile Include="Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="particles.h" />
+    <ClInclude Include="Tests.h" />
+    <ClInclude Include="PerfTimer.h" />
   </ItemGroup>
 </Project>
