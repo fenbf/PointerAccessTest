@@ -27,25 +27,25 @@ public:
 		vel[2] = randF();
 		vel[3] = vel[1] + vel[2];
 		rot = 0.0f;
-		time = 1.0f+randF();
+		time = 2.0f+randF();
 	}
 
 	virtual void update(float dt)
 	{
-		if (time > 0.0f)
-		{
-			vel[0] += acc[0] * dt;
-			vel[1] += acc[1] * dt;
-			vel[2] += acc[2] * dt;
-			pos[0] += vel[0] * dt;
-			pos[1] += vel[1] * dt;
-			pos[2] += vel[2] * dt;
-			col[0] = pos[0] * 0.001f;
-			col[1] = pos[1] * 0.001f;
-			col[2] = pos[2] * 0.001f;
-			rot += vel[3] * dt;
-			time -= dt;
-		}
+		vel[0] += acc[0] * dt;
+		vel[1] += acc[1] * dt;
+		vel[2] += acc[2] * dt;
+		pos[0] += vel[0] * dt;
+		pos[1] += vel[1] * dt;
+		pos[2] += vel[2] * dt;
+		col[0] = pos[0] * 0.001f;
+		col[1] = pos[1] * 0.001f;
+		col[2] = pos[2] * 0.001f;
+		rot += vel[3] * dt;
+		time -= dt;
+
+		if (time < 0.0f)
+			generate();
 	}
 };
 
@@ -105,26 +105,48 @@ public:
 			p->rot[i] = 0.0f;
 
 		for (size_t i = 0; i < count; ++i)
-			p->time[i] = 1.0f + randF();
+			p->time[i] = 2.0f + randF();
 	}
 
 	static void update(ParticleData *p, float dt)
 	{
 		for (size_t i = 0; i < p->_count; ++i)
 		{
-			if (p->time[i] > 0.0f)
+			p->vel[i * 4 + 0] += p->acc[i * 4 + 0] * dt;
+			p->vel[i * 4 + 1] += p->acc[i * 4 + 1] * dt;
+			p->vel[i * 4 + 2] += p->acc[i * 4 + 2] * dt;
+			p->pos[i * 4 + 0] += p->vel[i * 4 + 0] * dt;
+			p->pos[i * 4 + 1] += p->vel[i * 4 + 1] * dt;
+			p->pos[i * 4 + 2] += p->vel[i * 4 + 2] * dt;
+		}
+
+		for (size_t i = 0; i < p->_count; ++i)
+		{
+			p->col[i * 4 + 0] = p->pos[i * 4 + 0] * 0.001f;
+			p->col[i * 4 + 1] = p->pos[i * 4 + 1] * 0.001f;
+			p->col[i * 4 + 2] = p->pos[i * 4 + 2] * 0.001f;
+		}
+
+		for (size_t i = 0; i < p->_count; ++i)
+		{
+			p->rot[i] += p->vel[i * 4 + 3] * dt;
+			p->time[i] -= dt;
+		}
+
+		for (size_t i = 0; i < p->_count; ++i)
+		{
+			if (p->time[i] < 0.0f)
 			{
-				p->vel[i * 4 + 0] += p->acc[i * 4 + 0] * dt;
-				p->vel[i * 4 + 1] += p->acc[i * 4 + 1] * dt;
-				p->vel[i * 4 + 2] += p->acc[i * 4 + 2] * dt;
-				p->pos[i * 4 + 0] += p->vel[i * 4 + 0] * dt;
-				p->pos[i * 4 + 1] += p->vel[i * 4 + 1] * dt;
-				p->pos[i * 4 + 2] += p->vel[i * 4 + 2] * dt;
-				p->col[i * 4 + 0] = p->pos[i * 4 + 0] * 0.001f;
-				p->col[i * 4 + 1] = p->pos[i * 4 + 1] * 0.001f;
-				p->col[i * 4 + 2] = p->pos[i * 4 + 2] * 0.001f;
-				p->rot[i] += p->vel[i * 4 + 3] * dt;
-				p->time[i] -= dt;
+				p->acc[i * 4 + 0] = randF();
+				p->acc[i * 4 + 1] = randF();
+				p->acc[i * 4 + 2] = randF();
+				p->pos[i * 4 + 0] = p->pos[i * 4 + 1] = p->pos[i * 4 + 2] = 0.0f;
+				p->vel[i * 4 + 0] = randF();
+				p->vel[i * 4 + 1] = randF();
+				p->vel[i * 4 + 2] = randF();
+				p->vel[i * 4 + 3] = p->vel[i * 4 + 1] + p->vel[i * 4 + 2];
+				p->rot[i] = 0.0f;
+				p->time[i] = 2.0f + randF();
 			}
 		}
 	}

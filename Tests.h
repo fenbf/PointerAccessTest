@@ -5,18 +5,17 @@
 class Test
 {
 protected:
-	double _creationTime{ 0.0 };
-	double _generationTime{ 0.0 };
-	double _updatesTime{ 0.0 };
-	double _memoryKb{ 0.0 };
+	double _creationTime;
+	double _updatesTime;
+	double _memoryKb;
 public:
+	Test() : _creationTime(0.0), _updatesTime(0.0) { }
 	virtual ~Test() { }
 
 	virtual std::string name() const = 0;
-	virtual void run(size_t count, size_t gens, size_t updates) = 0;
+	virtual void run(size_t count, size_t updates) = 0;
 
 	double getCreationTime() const { return _creationTime; }
-	double getGenerationTime() const { return _generationTime; }
 	double getUpdateTime() const { return _updatesTime; }
 	double getMemory() const { return _memoryKb; }
 };
@@ -24,23 +23,23 @@ public:
 class TestVectorOfPointers : public Test
 {
 public:
-	virtual std::string name() const { return "vector of shared_ptr"; }
+	virtual std::string name() const override { return "vector of shared_ptr"; }
 
-	virtual void run(size_t count, size_t gens, size_t updates);
+	virtual void run(size_t count, size_t updates) override;
 };
 
 class TestVectorOfObjects : public Test
 {
 public:
-	virtual std::string name() const { return "vector of objects"; }
+	virtual std::string name() const override { return "vector of objects"; }
 
-	virtual void run(size_t count, size_t gens, size_t updates);
+	virtual void run(size_t count, size_t updates) override;
 };
 
 class TestParticleData : public Test
 {
 public:
-	virtual std::string name() const { return "particle data"; }
+	virtual std::string name() const override { return "particle data"; }
 
-	virtual void run(size_t count, size_t gens, size_t updates);
+	virtual void run(size_t count, size_t updates) override;
 };
