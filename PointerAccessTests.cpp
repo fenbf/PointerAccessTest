@@ -38,7 +38,7 @@ void printTests(const std::vector<std::unique_ptr<Test>> &tests)
 
 int main(int argc, char *argv[])
 {
-	const size_t count = argc > 1 ? atoi(argv[1]) : 20000;
+	const size_t count = argc > 1 ? atoi(argv[1]) : 2000;
 	const size_t updates = argc > 2 ? atoi(argv[2]) : 20000;
 
 	std::cout << "count: " << count << ", updates: " << updates << std::endl;

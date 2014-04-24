@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <xmmintrin.h>
 
 static int randSeed = 10;
 inline float randF() { return 0.01f*(float)((randSeed++) % 100); }// (float)rand() / (float)RAND_MAX; }
@@ -21,7 +22,8 @@ public:
 		acc[0] = randF();
 		acc[1] = randF();
 		acc[2] = randF();
-		pos[0] = pos[1] = pos[2] = 0.0f;
+		acc[4] = randF();
+		pos[0] = pos[1] = pos[2] = pos[3] = 0.0f;
 		vel[0] = randF();
 		vel[1] = randF();
 		vel[2] = randF();
@@ -35,12 +37,15 @@ public:
 		vel[0] += acc[0] * dt;
 		vel[1] += acc[1] * dt;
 		vel[2] += acc[2] * dt;
+		vel[3] += acc[3] * dt;
 		pos[0] += vel[0] * dt;
 		pos[1] += vel[1] * dt;
 		pos[2] += vel[2] * dt;
+		pos[3] += vel[3] * dt;
 		col[0] = pos[0] * 0.001f;
 		col[1] = pos[1] * 0.001f;
 		col[2] = pos[2] * 0.001f;
+		col[3] = pos[3] * 0.001f;
 		rot += vel[3] * dt;
 		time -= dt;
 
@@ -53,7 +58,7 @@ class ParticleData
 {
 public:
 	const size_t _count;
-	std::unique_ptr<float[]> _data;
+	float *_data;
 	float *pos;
 	float *acc;
 	float *vel;
@@ -68,20 +73,27 @@ public:
 
 public:
 	explicit ParticleData(size_t count) :
-		_count(count),
-		_data(new float[(4 + 4 + 4 + 4 + 1 + 1) * count])
+		_count(count)
 	{
-		pos = _data.get() + 0;
-		acc = _data.get() + count * 4;
-		vel = _data.get() + count * (4 + 4);
-		col = _data.get() + count * (4 + 4 + 4);
-		rot = _data.get() + count * (4 + 4 + 4 + 4);
-		time = _data.get() + count * (4 + 4 + 4 + 4 +1);
+		_data = (float *)_aligned_malloc(sizeof(float)*(4 + 4 + 4 + 4 + 1 + 1) * count, 16);
+		pos = _data + 0;
+		acc = _data + count * 4;
+		vel = _data + count * (4 + 4);
+		col = _data + count * (4 + 4 + 4);
+		rot = _data + count * (4 + 4 + 4 + 4);
+		time = _data + count * (4 + 4 + 4 + 4 +1);
+	}
+
+	~ParticleData()
+	{
+		_aligned_free(_data);
 	}
 
 	static void generate(ParticleData *p)
 	{
 		const size_t count = p->_count;
+
+		__m128 *d;
 
 		for (size_t i = 0; i < count; ++i)
 		{
@@ -91,7 +103,10 @@ public:
 		}
 
 		for (size_t i = 0; i < count; ++i)
-			p->pos[i * 4 + 0] = p->pos[i * 4 + 1] = p->pos[i * 4 + 2] = 0.0f;		
+		{
+			d = (__m128*)&p->pos[i * 4];
+			*d = _mm_set1_ps(0.0f);
+		}	
 
 		for (size_t i = 0; i < count; ++i)
 		{
@@ -110,21 +125,25 @@ public:
 
 	static void update(ParticleData *p, float dt)
 	{
+		__m128 *a, *v, *pos, t, at, vt;
+		t = _mm_set1_ps(dt);
 		for (size_t i = 0; i < p->_count; ++i)
 		{
-			p->vel[i * 4 + 0] += p->acc[i * 4 + 0] * dt;
-			p->vel[i * 4 + 1] += p->acc[i * 4 + 1] * dt;
-			p->vel[i * 4 + 2] += p->acc[i * 4 + 2] * dt;
-			p->pos[i * 4 + 0] += p->vel[i * 4 + 0] * dt;
-			p->pos[i * 4 + 1] += p->vel[i * 4 + 1] * dt;
-			p->pos[i * 4 + 2] += p->vel[i * 4 + 2] * dt;
+			a = (__m128*)&p->vel[i * 4];
+			v = (__m128*)&p->acc[i * 4];
+			pos = (__m128*)&p->pos[i * 4];
+			at = _mm_mul_ps(*a, t);
+			*v = _mm_add_ps(*v, at);
+			vt = _mm_mul_ps(*v, t);
+			*pos = _mm_add_ps(*pos, vt);
 		}
 
+		t = _mm_set1_ps(0.001f);
 		for (size_t i = 0; i < p->_count; ++i)
 		{
-			p->col[i * 4 + 0] = p->pos[i * 4 + 0] * 0.001f;
-			p->col[i * 4 + 1] = p->pos[i * 4 + 1] * 0.001f;
-			p->col[i * 4 + 2] = p->pos[i * 4 + 2] * 0.001f;
+			a = (__m128*)&p->col[i * 4];
+			at = _mm_mul_ps(*a, t);
+			*a = _mm_add_ps(*a, at);
 		}
 
 		for (size_t i = 0; i < p->_count; ++i)
