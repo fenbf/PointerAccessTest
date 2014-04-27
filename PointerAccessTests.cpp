@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	std::vector<std::unique_ptr<Test>> tests;
 	tests.emplace_back(new TestVectorOfObjects());
 	tests.emplace_back(new TestVectorOfPointers());
-	tests.emplace_back(new TestParticleData());
+	//tests.emplace_back(new TestParticleData());
 
 	const size_t countStart = 1000;
 	const size_t countEnd = 51000;
