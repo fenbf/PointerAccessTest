@@ -49,11 +49,25 @@ int main(int argc, char *argv[])
 {
 	bool showCreation = true;
 	bool showUpdates = true;
+	bool runCounts = true;
+	bool runUpdates = true;
+	bool onlyShortInfo = true;
+
 	if (argc > 1)
 	{
 		std::string cmd = argv[1];
-		showCreation = cmd.find('c') != std::string::npos;
-		showUpdates = cmd.find('u') != std::string::npos;
+		if (cmd.size() >= 2)
+		{
+			showCreation = cmd[0] == 'c' || cmd[0] == 'x';
+			showUpdates = cmd[0] == 'u' || cmd[0] == 'x';
+			runCounts = cmd[1] == 'c' || cmd[1] == 'x';
+			runUpdates = cmd[1] == 'u' || cmd[1] == 'x';
+		}
+		if (argc > 2)
+		{
+			cmd = argv[2];
+			onlyShortInfo = cmd == "short";
+		}
 	}
 
 	//std::cout << "count: " << count << ", updates: " << updates << std::endl;
@@ -74,23 +88,25 @@ int main(int argc, char *argv[])
 	const size_t updateSteps = 10;
 	const size_t updateDelta = (updateEnd - updateStart) / updateSteps;
 
-	if (showCreation)
+	if (runCounts)
 	{
+		std::cout << "elem count from " << countStart << " (updates " << updateStart << ")" << std::endl;
 		for (size_t count = countStart; count <= countEnd; count += countDelta)
 		{
 			std::cout << count << ";";
 			runTests(tests, count, updateStart);
-			printTests(tests, true, showCreation, showUpdates);
+			printTests(tests, onlyShortInfo, showCreation, showUpdates);
 		}
 	}
 
-	if (showUpdates)
+	if (runUpdates)
 	{
+		std::cout << "updates count from " << updateStart << " (elem count " << countStart << ")" << std::endl;
 		for (size_t updates = updateStart; updates <= updateEnd; updates += updateDelta)
 		{
 			std::cout << updates << ";";
 			runTests(tests, countStart, updates);
-			printTests(tests, true, showCreation, showUpdates);
+			printTests(tests, onlyShortInfo, showCreation, showUpdates);
 		}
 	}
 
