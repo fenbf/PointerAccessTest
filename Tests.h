@@ -36,11 +36,3 @@ public:
 
 	virtual void run(size_t count, size_t updates) override;
 };
-
-class TestParticleData : public Test
-{
-public:
-	virtual std::string name() const override { return "particle data"; }
-
-	virtual void run(size_t count, size_t updates) override;
-};

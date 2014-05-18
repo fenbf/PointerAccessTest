@@ -75,13 +75,11 @@ int main(int argc, char *argv[])
 	if (showUpdates)
 		std::cout << "will print update time in miliseconds..." << std::endl;
 
-	//std::cout << "count: " << count << ", updates: " << updates << std::endl;
-	//std::cout << "sizeof(Particle): " << sizeof(Particle) << std::endl;
+	std::cout << sizeof (Particle) << std::endl;
 
 	std::vector<std::unique_ptr<Test>> tests;
 	tests.emplace_back(new TestVectorOfObjects());
 	tests.emplace_back(new TestVectorOfPointers());
-	//tests.emplace_back(new TestParticleData());
 
 	const size_t countStart = 1000;
 	const size_t countEnd = 51000;

@@ -3,6 +3,7 @@
 #include "particles.h"
 #include <memory>
 #include <vector>
+#include <iostream>
 
 static const float DELTA_TIME = 1.0f / 60.0f;
 
@@ -19,13 +20,19 @@ void TestVectorOfPointers::run(size_t count, size_t updates)
 
 	perf.stop(&_creationTime);
 
-	// randomize:
+	// randomize to simulate 
 	for (size_t i = 0; i < count / 2; ++i)
 	{
 		int a = rand() % count;
 		int b = rand() % count;
-		std::swap(particles[a], particles[b]);
+		if (a != b)
+			std::swap(particles[a], particles[b]);
 	}
+
+	/*for (int i = 0; i < 10; ++i)
+	{
+		std::cout << (unsigned long)particles[i].get() << std::endl;
+	}*/
 
 	_memoryKb = (particles.capacity()*sizeof(Particle)) / 1024.0;
 
@@ -68,23 +75,5 @@ void TestVectorOfObjects::run(size_t count, size_t updates)
 		for (auto p = particles.begin(); p != particles.end(); ++p)
 			p->update(DELTA_TIME);
 	}
-	perf.stop(&_updatesTime);
-}
-
-void TestParticleData::run(size_t count, size_t updates)
-{
-	PerfTimer perf;
-
-	perf.start();
-	ParticleData particles(count);
-	perf.stop(&_creationTime);
-
-	_memoryKb = ParticleData::memoryUsed(&particles) / 1024.0;
-
-	ParticleData::generate(&particles);
-
-	perf.start();
-	for (size_t u = 0; u < updates; ++u)
-		ParticleData::update(&particles, DELTA_TIME);
 	perf.stop(&_updatesTime);
 }
