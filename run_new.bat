@@ -1,2 +1,2 @@
-Release\PointerAccessTests.exe cx > out_count.txt
-Release\PointerAccessTests.exe ux > out_upd.txt
+Release\PointerAccessTests.exe xx > out_creation.txt
+rem Release\PointerAccessTests.exe ux > out_upd.txt

@@ -1,5 +1,5 @@
 #Pointer Access Tests#
-`std::vector<Obj>` vs `std::vector<std::shared_ptr<Obj>>` vs `Obj in SOA style`
+`std::vector<Obj>` vs `std::vector<std::shared_ptr<Obj>>`
 
 described on a blog post at [Code And Graphics - Vector of object vs Vector of pointers Tests](http://www.bfilipek.com/2014/04/vector-of-obj-vs-vector-of-ptr.html)
 

@@ -19,14 +19,14 @@ public:
 		QueryPerformanceCounter(&_startTime);
 	}
 
-	void stop(double *microseconds)
+	void stop(double *milisec)
 	{
 		QueryPerformanceCounter(&_endTime);
 		double micro;
 		micro = static_cast<double>(_endTime.QuadPart - _startTime.QuadPart);
 		micro *= 1000;
 		micro /= static_cast<double>(_freq.QuadPart);
-		if (microseconds)
-			*microseconds += micro;
+		if (milisec)
+			*milisec = micro;
 	}
 };

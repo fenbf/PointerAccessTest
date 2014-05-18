@@ -11,20 +11,21 @@ void TestVectorOfPointers::run(size_t count, size_t updates)
 	PerfTimer perf;
 
 	perf.start();
-	/*std::vector<std::shared_ptr<Particle>> particles(count);
+	std::vector<std::shared_ptr<Particle>> particles(count);
 	for (auto p = particles.begin(); p != particles.end(); ++p)
 	{
 		*p = std::make_shared<Particle>();
-	}*/
-
-	std::vector<std::shared_ptr<Particle>> particles;
-	particles.reserve(count);
-	for (auto p = particles.begin(); p != particles.end(); ++p)
-	{
-		particles.push_back(std::shared_ptr<Particle>(new Particle()));
 	}
 
 	perf.stop(&_creationTime);
+
+	// randomize:
+	for (size_t i = 0; i < count / 2; ++i)
+	{
+		int a = rand() % count;
+		int b = rand() % count;
+		std::swap(particles[a], particles[b]);
+	}
 
 	_memoryKb = (particles.capacity()*sizeof(Particle)) / 1024.0;
 
@@ -47,6 +48,14 @@ void TestVectorOfObjects::run(size_t count, size_t updates)
 	perf.start();
 	std::vector<Particle> particles(count);
 	perf.stop(&_creationTime);
+
+	// randomize: no sense in this case...
+	/*for (size_t i = 0; i < count / 2; ++i)
+	{
+		int a = rand() % count;
+		int b = rand() % count;
+		std::swap(particles[a], particles[b]);
+	}*/
 
 	_memoryKb = (particles.capacity()*sizeof(Particle)) / 1024.0;
 

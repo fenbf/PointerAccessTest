@@ -70,6 +70,11 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	if (showCreation)
+		std::cout << "will print creation time in miliseconds..." << std::endl;
+	if (showUpdates)
+		std::cout << "will print update time in miliseconds..." << std::endl;
+
 	//std::cout << "count: " << count << ", updates: " << updates << std::endl;
 	//std::cout << "sizeof(Particle): " << sizeof(Particle) << std::endl;
 
@@ -90,7 +95,14 @@ int main(int argc, char *argv[])
 
 	if (runCounts)
 	{
-		std::cout << "elem count from " << countStart << " (updates " << updateStart << ")" << std::endl;
+		std::cout << "elem count from " << countStart << " (fixed updates at " << updateStart << ")" << std::endl;
+		std::cout << "count;";
+		for (auto t = tests.begin(); t != tests.end(); ++t)
+		{
+			std::cout << (*t)->name() << ",";
+			(*t)->resetTimes();
+		}
+		std::cout << std::endl;
 		for (size_t count = countStart; count <= countEnd; count += countDelta)
 		{
 			std::cout << count << ";";
@@ -101,7 +113,14 @@ int main(int argc, char *argv[])
 
 	if (runUpdates)
 	{
-		std::cout << "updates count from " << updateStart << " (elem count " << countStart << ")" << std::endl;
+		std::cout << "updates count from " << updateStart << " (fixed elem count at " << countStart << ")" << std::endl;	
+		std::cout << "updates;";
+		for (auto t = tests.begin(); t != tests.end(); ++t)
+		{
+			std::cout << (*t)->name() << ",";
+			(*t)->resetTimes();
+		}
+		std::cout << std::endl;
 		for (size_t updates = updateStart; updates <= updateEnd; updates += updateDelta)
 		{
 			std::cout << updates << ";";
