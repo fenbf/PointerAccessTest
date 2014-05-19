@@ -75,20 +75,20 @@ int main(int argc, char *argv[])
 	if (showUpdates)
 		std::cout << "will print update time in miliseconds..." << std::endl;
 
-	std::cout << sizeof (Particle) << std::endl;
+	std::cout << "sizeof Particle: " << sizeof (Particle) << std::endl;
 
 	std::vector<std::unique_ptr<Test>> tests;
 	tests.emplace_back(new TestVectorOfObjects());
 	tests.emplace_back(new TestVectorOfPointers());
 
 	const size_t countStart = 1000;
-	const size_t countEnd = 51000;
-	const size_t countSteps = 10;
+	const size_t countEnd = 71000;
+	const size_t countSteps = 20;
 	const size_t countDelta = (countEnd - countStart) / countSteps;
 
 	const size_t updateStart = 1000;
-	const size_t updateEnd = 21000;
-	const size_t updateSteps = 10;
+	const size_t updateEnd = 41000;
+	const size_t updateSteps = 20;
 	const size_t updateDelta = (updateEnd - updateStart) / updateSteps;
 
 	if (runCounts)
