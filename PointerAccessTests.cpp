@@ -16,7 +16,7 @@ void runTests(std::vector<std::unique_ptr<Test>> &tests, size_t count, size_t up
 	}
 }
 
-void printTests(const std::vector<std::unique_ptr<Test>> &tests, bool onlyShort, bool creation, bool updates)
+void printTests(const std::vector<std::unique_ptr<Test>> &tests, bool onlyShort, bool creation, bool updates, bool sorts)
 {
 	if (!onlyShort)
 	{
@@ -26,6 +26,7 @@ void printTests(const std::vector<std::unique_ptr<Test>> &tests, bool onlyShort,
 			std::cout << "memory:          " << (*t)->getMemory() << " kb" << std::endl;
 			std::cout << "creation time:   " << (*t)->getCreationTime() << " milisec" << std::endl;
 			std::cout << "updates time:    " << (*t)->getUpdateTime() << " milisec" << std::endl;
+			std::cout << "sort time:    " << (*t)->getSortTime() << " milisec" << std::endl;
 		}
 		std::cout << std::endl;
 	}
@@ -42,6 +43,12 @@ void printTests(const std::vector<std::unique_ptr<Test>> &tests, bool onlyShort,
 			std::cout << (*t)->getUpdateTime() << ";";
 	}
 
+	if (sorts)
+	{
+		for (auto t = tests.cbegin(); t != tests.cend(); ++t)
+			std::cout << (*t)->getSortTime() << ";";
+	}
+
 	std::cout << std::endl;
 }
 
@@ -49,9 +56,10 @@ int main(int argc, char *argv[])
 {
 	bool showCreation = true;
 	bool showUpdates = true;
+	bool showSorts = true;
 	bool runCounts = true;
 	bool runUpdates = true;
-	bool onlyShortInfo = true;
+	bool onlyShortInfo = false;
 
 	if (argc > 1)
 	{
@@ -105,7 +113,7 @@ int main(int argc, char *argv[])
 		{
 			std::cout << count << ";";
 			runTests(tests, count, updateStart);
-			printTests(tests, onlyShortInfo, showCreation, showUpdates);
+			printTests(tests, onlyShortInfo, showCreation, showUpdates, showSorts);
 		}
 	}
 
@@ -123,7 +131,7 @@ int main(int argc, char *argv[])
 		{
 			std::cout << updates << ";";
 			runTests(tests, countStart, updates);
-			printTests(tests, onlyShortInfo, showCreation, showUpdates);
+			printTests(tests, onlyShortInfo, showCreation, showUpdates, showSorts);
 		}
 	}
 

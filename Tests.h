@@ -5,11 +5,13 @@
 class Test
 {
 protected:
-	double _creationTime;
-	double _updatesTime;
-	double _memoryKb;
+	double _creationTime{ 0.0 };
+	double _updatesTime{ 0.0 };
+	double _sortTime{ 0.0 };
+	double _memoryKb{ 0.0 };
+
 public:
-	Test() : _creationTime(0.0), _updatesTime(0.0) { }
+	Test() = default;
 	virtual ~Test() { }
 
 	virtual std::string name() const = 0;
@@ -18,6 +20,7 @@ public:
 	void resetTimes() { _creationTime = _updatesTime = 0.0; }
 	double getCreationTime() const { return _creationTime; }
 	double getUpdateTime() const { return _updatesTime; }
+	double getSortTime() const { return _sortTime; }
 	double getMemory() const { return _memoryKb; }
 };
 

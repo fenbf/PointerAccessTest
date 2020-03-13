@@ -19,7 +19,6 @@ private:
 public:
 	PerfTimer()
 	{
-
 		QueryPerformanceFrequency(&_freq);
 	}
 

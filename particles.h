@@ -2,18 +2,21 @@
 
 #include <memory>
 
-static int randSeed = 10;
+inline int randSeed = 10;
 inline float randF() { return 0.01f*(float)((randSeed++) % 100); }// (float)rand() / (float)RAND_MAX; }
+
+constexpr unsigned EXTRA_BYTES = 100;
 
 class Particle
 {
-private:
+public:
 	float pos[4];
 	float acc[4];
 	float vel[4];
 	float col[4];
 	float rot;
 	float time;
+	uint8_t extra[EXTRA_BYTES];
 public:
 
 	void generate()

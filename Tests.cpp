@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 static const float DELTA_TIME = 1.0f / 60.0f;
 
@@ -46,6 +47,17 @@ void TestVectorOfPointers::run(size_t count, size_t updates)
 			(*p)->update(DELTA_TIME);
 	}
 	perf.stop(&_updatesTime);
+
+	perf.start();
+	for (size_t u = 0; u < updates; ++u)
+	{
+		std::sort(std::begin(particles), std::end(particles),
+			[](const std::shared_ptr<Particle>& a, const std::shared_ptr<Particle>& b) {
+				return a->pos[0] < b->pos[0];
+			}
+		);
+	}
+	perf.stop(&_sortTime);
 }
 
 void TestVectorOfObjects::run(size_t count, size_t updates)
@@ -76,4 +88,15 @@ void TestVectorOfObjects::run(size_t count, size_t updates)
 			p->update(DELTA_TIME);
 	}
 	perf.stop(&_updatesTime);
+
+	perf.start();
+	for (size_t u = 0; u < updates; ++u)
+	{
+		std::sort(std::begin(particles), std::end(particles),
+			[](const Particle& a, const Particle& b) {
+				return a.pos[0] < b.pos[0];
+			}
+		);
+	}
+	perf.stop(&_sortTime);
 }
