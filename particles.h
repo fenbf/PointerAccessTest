@@ -5,7 +5,7 @@
 inline int randSeed = 10;
 inline float randF() { return 0.01f*(float)((randSeed++) % 100); }// (float)rand() / (float)RAND_MAX; }
 
-constexpr unsigned EXTRA_BYTES = 100;
+//constexpr unsigned EXTRA_BYTES = 100;
 
 class Particle
 {
@@ -16,10 +16,10 @@ public:
 	float col[4];
 	float rot;
 	float time;
-	uint8_t extra[EXTRA_BYTES];
+	//uint8_t extra[EXTRA_BYTES];
 public:
 
-	void generate()
+	void generate() noexcept
 	{
 		acc[0] = randF();
 		acc[1] = randF();
@@ -34,7 +34,7 @@ public:
 		time = 2.0f+randF();
 	}
 
-	void update(float dt)
+	void update(float dt) noexcept
 	{
 		vel[0] += acc[0] * dt;
 		vel[1] += acc[1] * dt;

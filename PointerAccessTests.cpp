@@ -10,9 +10,9 @@
 
 void runTests(std::vector<std::unique_ptr<Test>> &tests, size_t count, size_t updates)
 {
-	for (auto t = tests.begin(); t != tests.end(); ++t)
+	for (auto& t : tests)
 	{
-		(*t)->run(count, updates);
+		t->run(count, updates);
 	}
 }
 
@@ -20,33 +20,33 @@ void printTests(const std::vector<std::unique_ptr<Test>> &tests, bool onlyShort,
 {
 	if (!onlyShort)
 	{
-		for (auto t = tests.begin(); t != tests.end(); ++t)
+		for (auto& t : tests)
 		{
-			std::cout << std::endl << (*t)->name() << " -----" << std::endl;
-			std::cout << "memory:          " << (*t)->getMemory() << " kb" << std::endl;
-			std::cout << "creation time:   " << (*t)->getCreationTime() << " milisec" << std::endl;
-			std::cout << "updates time:    " << (*t)->getUpdateTime() << " milisec" << std::endl;
-			std::cout << "sort time:    " << (*t)->getSortTime() << " milisec" << std::endl;
+			std::cout << std::endl << t->name() << " -----" << std::endl;
+			std::cout << "memory:          " << t->getMemory() << " kb" << std::endl;
+			std::cout << "creation time:   " << t->getCreationTime() << " milisec" << std::endl;
+			std::cout << "updates time:    " << t->getUpdateTime() << " milisec" << std::endl;
+			std::cout << "sort time:    " << t->getSortTime() << " milisec" << std::endl;
 		}
 		std::cout << std::endl;
 	}
 
 	if (creation)
 	{
-		for (auto t = tests.cbegin(); t != tests.cend(); ++t)
-			std::cout << (*t)->getCreationTime() << ";";
+		for (auto& t : tests)
+			std::cout << t->getCreationTime() << ";";
 	}
 
 	if (updates)
 	{
-		for (auto t = tests.cbegin(); t != tests.cend(); ++t)
-			std::cout << (*t)->getUpdateTime() << ";";
+		for (auto& t : tests)
+			std::cout << t->getUpdateTime() << ";";
 	}
 
 	if (sorts)
 	{
-		for (auto t = tests.cbegin(); t != tests.cend(); ++t)
-			std::cout << (*t)->getSortTime() << ";";
+		for (auto& t : tests)
+			std::cout << t->getSortTime() << ";";
 	}
 
 	std::cout << std::endl;
@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
 	std::vector<std::unique_ptr<Test>> tests;
 	tests.emplace_back(new TestVectorOfObjects());
 	tests.emplace_back(new TestVectorOfPointers());
+	tests.emplace_back(new TestVectorOfUniquePointers());
 
 	const size_t countStart = 1000;
 	const size_t countEnd = 71000;
@@ -121,10 +122,10 @@ int main(int argc, char *argv[])
 	{
 		std::cout << "updates count from " << updateStart << " (fixed elem count at " << countStart << ")" << std::endl;	
 		std::cout << "updates;";
-		for (auto t = tests.begin(); t != tests.end(); ++t)
+		for (auto& t : tests)
 		{
-			std::cout << (*t)->name() << ",";
-			(*t)->resetTimes();
+			std::cout << t->name() << ",";
+			t->resetTimes();
 		}
 		std::cout << std::endl;
 		for (size_t updates = updateStart; updates <= updateEnd; updates += updateDelta)

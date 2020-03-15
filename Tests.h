@@ -27,7 +27,15 @@ public:
 class TestVectorOfPointers : public Test
 {
 public:
-	virtual std::string name() const override { return "vector of shared_ptr"; }
+	std::string name() const override { return "vector of shared_ptr"; }
+
+	virtual void run(size_t count, size_t updates) override;
+};
+
+class TestVectorOfUniquePointers : public Test
+{
+public:
+	std::string name() const override { return "vector of unique_ptr"; }
 
 	virtual void run(size_t count, size_t updates) override;
 };
@@ -35,7 +43,7 @@ public:
 class TestVectorOfObjects : public Test
 {
 public:
-	virtual std::string name() const override { return "vector of objects"; }
+	std::string name() const override { return "vector of objects"; }
 
-	virtual void run(size_t count, size_t updates) override;
+	void run(size_t count, size_t updates) override;
 };
